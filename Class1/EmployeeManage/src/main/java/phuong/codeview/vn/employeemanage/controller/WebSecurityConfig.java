@@ -21,8 +21,13 @@ public class WebSecurityConfig{
     @Bean
     public DefaultSecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.authorizeHttpRequests(registry ->{
-            registry.requestMatchers("foods/list").hasRole("Admin");
-            registry.requestMatchers("login").permitAll();
+            registry.requestMatchers("users/list").permitAll();
+            registry.requestMatchers("users/add").permitAll();
+            registry.requestMatchers("users/showFormForUpdate").permitAll();
+            registry.requestMatchers("users/save").permitAll();
+            registry.requestMatchers("users/delete").permitAll();
+            registry.requestMatchers("users/search").permitAll();
+//            registry.requestMatchers("login").permitAll();
             registry.anyRequest().authenticated();
         })
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
