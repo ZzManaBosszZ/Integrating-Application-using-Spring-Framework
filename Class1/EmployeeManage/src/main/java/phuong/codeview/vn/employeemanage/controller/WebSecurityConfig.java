@@ -1,10 +1,13 @@
 package phuong.codeview.vn.employeemanage.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,31 +21,38 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
 @EnableWebSecurity
 public class WebSecurityConfig{
 
+    @Autowired
+    private UserDetailsService userDetailsService;
+
     @Bean
-    public DefaultSecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity.authorizeHttpRequests(registry ->{
-            registry.requestMatchers("users/list").permitAll();
-            registry.requestMatchers("users/add").permitAll();
-            registry.requestMatchers("users/showFormForUpdate").permitAll();
-            registry.requestMatchers("users/save").permitAll();
-            registry.requestMatchers("users/delete").permitAll();
+    public DefaultSecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, HttpServletResponse httpServletResponse) throws Exception {
+
+        return httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(registry ->{
+            registry.requestMatchers("users/list", "register/user").permitAll();
+            registry.requestMatchers("users/edit").hasRole("ADMIN");
+            registry.requestMatchers("users/add").hasRole("ADMIN");
+            registry.requestMatchers("users/showFormForUpdate").hasRole("ADMIN");
+            registry.requestMatchers("users/save").hasRole("ADMIN");
+            registry.requestMatchers("users/delete").hasRole("ADMIN");
             registry.requestMatchers("users/search").permitAll();
-//            registry.requestMatchers("login").permitAll();
             registry.anyRequest().authenticated();
         })
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .build();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails Admin = User.builder()
-                .username("phuong")
-                .password("$2a$12$fh7Vfh1mZr/hS7h9phPi4eIjQFgiHlSjwIWOQqhgljcDkVVXn8jlm")
-                .roles("Admin")
-                .build();
-        return new InMemoryUserDetailsManager(Admin);
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        UserDetails Admin = User.builder()
+//                .username("phuong")
+//                .password("$2a$12$fh7Vfh1mZr/hS7h9phPi4eIjQFgiHlSjwIWOQqhgljcDkVVXn8jlm")
+//                .roles("Admin")
+//                .build();
+//        return new InMemoryUserDetailsManager(Admin);
+//    }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
