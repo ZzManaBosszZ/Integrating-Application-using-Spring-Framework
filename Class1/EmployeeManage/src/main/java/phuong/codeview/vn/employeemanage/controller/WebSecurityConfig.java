@@ -4,6 +4,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
@@ -15,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.DefaultSecurityFilterChain;
+import phuong.codeview.vn.employeemanage.service.MyUserDetailService;
 
 
 @Configuration
@@ -22,7 +26,7 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
 public class WebSecurityConfig{
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private MyUserDetailService myUserDetailService; ;
 
     @Bean
     public DefaultSecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, HttpServletResponse httpServletResponse) throws Exception {
@@ -52,6 +56,19 @@ public class WebSecurityConfig{
 //                .build();
 //        return new InMemoryUserDetailsManager(Admin);
 //    }
+
+        @Bean
+    public UserDetailsService userDetailsService() {
+        return myUserDetailService;
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(myUserDetailService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
 
 
     @Bean
