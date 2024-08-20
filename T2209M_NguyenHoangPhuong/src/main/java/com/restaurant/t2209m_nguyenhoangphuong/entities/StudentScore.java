@@ -25,10 +25,10 @@ public class StudentScore {
     @JoinColumn(name = "subject_id", nullable = false)
     private Subject subject;
 
-    @Column(name = "score1", nullable = false)
+    @Column(name = "score1", nullable = true)
     private BigDecimal score1 = BigDecimal.ZERO; // Default value if not set
 
-    @Column(name = "score2", nullable = false)
+    @Column(name = "score2", nullable = true)
     private BigDecimal score2 = BigDecimal.ZERO; // Default value if not set
 
     // Calculate Grade
