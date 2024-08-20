@@ -1,6 +1,5 @@
 package com.restaurant.t2209m_nguyenhoangphuong.controller;
 
-
 import com.restaurant.t2209m_nguyenhoangphuong.entities.Student;
 import com.restaurant.t2209m_nguyenhoangphuong.entities.StudentScore;
 import com.restaurant.t2209m_nguyenhoangphuong.entities.Subject;
@@ -13,8 +12,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/scores")
 public class StudentScoreController {
 
     @Autowired
@@ -26,25 +27,30 @@ public class StudentScoreController {
     @Autowired
     private SubjectRepository subjectRepository;
 
-    @GetMapping("/scores/new")
+    @GetMapping("/add")
     public String showAddScoreForm(Model model) {
         model.addAttribute("studentScore", new StudentScore());
         model.addAttribute("students", studentRepository.findAll());
         model.addAttribute("subjects", subjectRepository.findAll());
-        return "add_score";
+        return "students/score/add";
     }
 
-    @PostMapping("/scores")
+    @PostMapping("/add")
     public String addScore(@ModelAttribute("studentScore") StudentScore studentScore) {
+        // Find the student and subject by ID
         Student student = studentRepository.findById(studentScore.getStudent().getStudentId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid student ID: " + studentScore.getStudent().getStudentId()));
         Subject subject = subjectRepository.findById(studentScore.getSubject().getSubjectId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid subject ID: " + studentScore.getSubject().getSubjectId()));
 
+        // Set the student and subject to the studentScore
         studentScore.setStudent(student);
         studentScore.setSubject(subject);
 
+        // Save the studentScore to the database
         studentScoreRepository.save(studentScore);
-        return "redirect:/"; // Chuyển hướng về danh sách sinh viên
+
+        // Redirect to the students list page
+        return "redirect:/students";
     }
 }

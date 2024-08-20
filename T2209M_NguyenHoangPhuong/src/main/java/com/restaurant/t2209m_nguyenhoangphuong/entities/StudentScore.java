@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 public class StudentScore {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int studentScoreId;
+    private int studentScoreId; // Primitive type, managed by the database
 
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
@@ -26,58 +26,26 @@ public class StudentScore {
     private Subject subject;
 
     @Column(name = "score1", nullable = false)
-    private double score1;
+    private BigDecimal score1 = BigDecimal.ZERO; // Default value if not set
 
     @Column(name = "score2", nullable = false)
-    private double score2;
+    private BigDecimal score2 = BigDecimal.ZERO; // Default value if not set
 
     // Calculate Grade
     public String getGrade() {
-        double gradeValue = 0.3 * score1 + 0.7 * score2;
+        double gradeValue = 0.3 * score1.doubleValue() + 0.7 * score2.doubleValue();
         if (gradeValue >= 8.0) return "A";
         if (gradeValue >= 6.0) return "B";
         if (gradeValue >= 4.0) return "D";
         return "F";
     }
 
-    // Getters and Setters
-    public int getStudentScoreId() {
-        return studentScoreId;
+    // Setters
+    public void setScore1(BigDecimal score1) {
+        this.score1 = (score1 != null) ? score1 : BigDecimal.ZERO;
     }
 
-    public void setStudentScoreId(int studentScoreId) {
-        this.studentScoreId = studentScoreId;
-    }
-
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
-    }
-
-    public Subject getSubject() {
-        return subject;
-    }
-
-    public void setSubject(Subject subject) {
-        this.subject = subject;
-    }
-
-    public double getScore1() {
-        return score1;
-    }
-
-    public void setScore1(double score1) {
-        this.score1 = score1;
-    }
-
-    public double getScore2() {
-        return score2;
-    }
-
-    public void setScore2(double score2) {
-        this.score2 = score2;
+    public void setScore2(BigDecimal score2) {
+        this.score2 = (score2 != null) ? score2 : BigDecimal.ZERO;
     }
 }
