@@ -5,37 +5,31 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
-import java.util.List;
-import java.util.Set;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "subject_t")
 public class Subject {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int subjectId;
 
-    @Column(name = "subject_code")
+    @Column(name = "subject_code", nullable = false)
     private String subjectCode;
 
-    @Column(name = "subject_name")
+    @Column(name = "subject_name", nullable = false)
     private String subjectName;
 
-    @Column(name = "credit")
+    @Column(name = "credit", nullable = false)
     private int credit;
 
-    // Getters and setters
-
-    public Integer getSubjectId() {
+    // Getters and Setters
+    public int getSubjectId() {
         return subjectId;
     }
 
-    public void setSubjectId(Integer subjectId) {
+    public void setSubjectId(int subjectId) {
         this.subjectId = subjectId;
     }
 
@@ -55,12 +49,11 @@ public class Subject {
         this.subjectName = subjectName;
     }
 
-    public Integer getCredit() {
+    public int getCredit() {
         return credit;
     }
 
-    public void setCredit(Integer credit) {
+    public void setCredit(int credit) {
         this.credit = credit;
     }
 }
-

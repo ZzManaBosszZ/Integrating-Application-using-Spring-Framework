@@ -13,29 +13,39 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "student_score_t")
 public class StudentScore {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer studentScoreId;
+    private int studentScoreId;
 
     @ManyToOne
-    @JoinColumn(name = "student_id")
+    @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 
     @ManyToOne
-    @JoinColumn(name = "subject_id")
+    @JoinColumn(name = "subject_id", nullable = false)
     private Subject subject;
 
-    private Double score1;
-    private Double score2;
+    @Column(name = "score1", nullable = false)
+    private double score1;
 
-    // Getters and setters
+    @Column(name = "score2", nullable = false)
+    private double score2;
 
-    public Integer getStudentScoreId() {
+    // Calculate Grade
+    public String getGrade() {
+        double gradeValue = 0.3 * score1 + 0.7 * score2;
+        if (gradeValue >= 8.0) return "A";
+        if (gradeValue >= 6.0) return "B";
+        if (gradeValue >= 4.0) return "D";
+        return "F";
+    }
+
+    // Getters and Setters
+    public int getStudentScoreId() {
         return studentScoreId;
     }
 
-    public void setStudentScoreId(Integer studentScoreId) {
+    public void setStudentScoreId(int studentScoreId) {
         this.studentScoreId = studentScoreId;
     }
 
@@ -47,25 +57,27 @@ public class StudentScore {
         this.student = student;
     }
 
-    public Double getScore1() {
-        return score1;
-    }
-
-    public Double getScore2() {
-        return score2;
-    }
-
-    public void setScore1(Double score1) {
-        this.score1 = score1;
-    }
-
-    public void setScore2(Double score2) {}
-
     public Subject getSubject() {
         return subject;
     }
 
     public void setSubject(Subject subject) {
         this.subject = subject;
+    }
+
+    public double getScore1() {
+        return score1;
+    }
+
+    public void setScore1(double score1) {
+        this.score1 = score1;
+    }
+
+    public double getScore2() {
+        return score2;
+    }
+
+    public void setScore2(double score2) {
+        this.score2 = score2;
     }
 }

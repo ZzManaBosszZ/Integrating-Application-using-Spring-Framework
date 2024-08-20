@@ -26,13 +26,13 @@ public class StudentController {
     @Autowired
     private SubjectRepository subjectRepository;
 
+
+
     @GetMapping
     public String listStudents(Model model) {
-        List<Student> students = studentRepository.findAll();
-        List<StudentScore> scores = studentScoreRepository.findAll();
-        model.addAttribute("students", students);
-        model.addAttribute("scores", scores);
-        return "students/list"; // This corresponds to the Thymeleaf template
+        model.addAttribute("students", studentRepository.findAll());
+        model.addAttribute("scores", studentScoreRepository.findAll());
+        return "students/list";
     }
 
     @GetMapping("/add")
@@ -51,7 +51,7 @@ public class StudentController {
     public String editStudent(@PathVariable Integer id, Model model) {
         Student student = studentRepository.getReferenceById(id);
         model.addAttribute("student", student);
-        return "students/edit";
+        return "students";
     }
 
     @PostMapping("/{id}/update")
